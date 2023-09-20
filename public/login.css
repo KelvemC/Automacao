@@ -1,0 +1,16 @@
+
+.form-control{
+    background-color: rgb(167, 167, 172) !important;
+}
+
+
+.w-100.btn.btn-lg.btn-primary{
+    background-image: linear-gradient(to left, #32f7ac, #0078d8);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}

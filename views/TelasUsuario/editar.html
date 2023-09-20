@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Dispositivo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="/public/style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(to left, #32f7ac, #0078d8);">
+        <a class="navbar-brand" href="/controle">Controle de dispositivos</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/criarGrupo">Criar Grupo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/grupos">Ver Grupos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cadastrarDispositivos">Cadastro de Dispositivos</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#"><%=user%></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">sair</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    <%if(device && device.usuario && device.usuario == user){%>
+    <div class="container mt-5">
+        <h1 class="text-center" id="titulo">Editar WiFi
+        </h1>
+        <div class="row mt-4">
+            <div class="col-md-6 mx-auto">
+                <div style="background-color: #fff; border-radius: 10px; padding: 20px;">
+                    <h3>Informações adicionais:</h4>
+                        <p>Aqui vão algumas informações adicionais sobre o dispositivo.</p>
+                        <p><b>Nome:</b>
+                            <%=device.nome%>
+                                <br><b>Ligado?</b>
+                                <%if(device.on_ff==true){%>
+                                    Sim
+                                    <%} else {%>
+                                        Não
+                                        <%}%>
+                                            <br><b>Dispositivo já está em uso?</b>
+                                            <%if(device.used==true){%>
+                                                Sim
+                                                <%} else {%>
+                                                    Não
+                                                    <%}%>
+                                                        <br><b>WiFi do dispositivo:</b>
+                                                        <%=device.wifi%>
+                                                            <br><b>senha do wifi:</b>
+                                                            <%=device.senha_wifi%>
+                        </p>
+                </div>
+                <form id="edit-form" method="POST">
+
+                    <div class="input-group" style="padding: 10px;">
+                        <input type="text" class="form-control" placeholder="Digite o nome do WiFi" id="WiFi"
+                            name="WiFi" required>
+                        <input type="password" class="form-control" placeholder="Digite a senha do WiFi" id="Password"
+                            required name="Password">
+                    </div>
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-gradient" id="Enviar">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <%}else{%>
+        <script>
+            window.location.href = "/erro";
+        </script>
+    <% } %>
+    <script>
+        const wifiForm = document.querySelector('#edit-form');
+
+        wifiForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nomeWiFi = document.querySelector('#WiFi').value;
+            const Senha = document.querySelector('#Password').value;
+
+            const wifiData = {
+                "wifi": nomeWiFi,
+                "senha_wifi": Senha
+            };
+            
+            const options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(wifiData)
+            };
+
+            const options2 = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            "<%if(device){%>"
+            fetch('/editar/dispositivo/<%=device._id%>', options)
+                .then(response => {
+                    if (response.ok) {
+                        alert('Dispositivo editado com sucesso!');
+                        fetch('/editarWiFi/<%=device._id%>', options2)
+                            .then(response=>{
+                                if(response.ok){
+                                    window.location.href = "/controle";
+                                }else{
+                                    throw new Error("Não foi possível enviar edit MQTT");
+                                };
+                            })
+                    } else {
+                        throw new Error('Erro ao editar dispositivo');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Erro ao editar rede wifi');
+                });
+            "<%}%>"
+        });
+
+    </script>
+
+</body>
+
+</html>

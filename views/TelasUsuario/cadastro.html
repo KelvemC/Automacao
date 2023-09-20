@@ -1,0 +1,73 @@
+<html>
+
+<head>
+  <title>Cadastro de dispositivos</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link href="/public/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(to left, #32f7ac, #0078d8);">
+    <a class="navbar-brand" href="/controle">Controle de dispositivos</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/criarGrupo">Criar Grupo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/grupos">Ver Grupos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cadastrarDispositivos">Cadastro de Dispositivos</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#"><%=user%></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">sair</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h1 class="text-center" style="color:white">Cadastro de dispositivos</h1>
+        <form id="wifi-form" action="/dispositivo" method="post">
+          <div class="mb-3">
+            <label for="wifi-name" class="form-label" style="color:white">Nome do dispositivo</label>
+            <input type="text" class="form-control" id="device-name" name="nome" required>
+            <input type="hidden" class="form-control" name="on_off" value=false>
+            <input type="hidden" class="form-control" name="used" value=false>
+          </div>
+          <div class="mb-3">
+            <label for="wifi-ssid" class="form-label" style="color:white">Nome do WiFi</label>
+            <input type="text" class="form-control" id="wifi-ssid" name="wifi" required>
+          </div>
+          <div class="mb-3">
+            <label for="wifi-password" class="form-label" style="color:white">Senha do WiFi</label>
+            <input type="password" class="form-control" id="wifi-password" name="senha_wifi" required>
+          </div>
+          <div class="button-container">
+            <input type="hidden" class="form-control" name="usuario" value="<%=user%>">
+            <button type="submit" class="btn btn-gradient" id="Enviar">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "apirest",
+  "version": "3.6.0",
+  "description": "API REST para projeto de automação",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "jest",
+    "load-test": "artillery run load-test.yaml"
+  },
+  "author": "Kelvem Carlos",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "connect-mongodb-session": "^3.1.1",
+    "dotenv": "^16.1.4",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "googleapis": "^118.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "method-override": "^3.0.0",
+    "moment-timezone": "^0.5.43",
+    "mongoose": "^6.9.1",
+    "mqtt": "^4.3.7",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.3",
+    "nodemon": "^1.14.9",
+    "supertest": "^6.3.3"
+  },
+  "devDependencies": {
+    "artillery": "^2.0.0-34",
+    "jest": "^25.0.0"
+  }
+}

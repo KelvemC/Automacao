@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle dispositivos</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link href="/public/style.css" rel="stylesheet">
+  <script src="/public/scriptsJS/Eventos.js"></script>
+  <script src="https://momentjs.com/downloads/moment.min.js"></script>
+  <script src="https://momentjs.com/downloads/moment-timezone-with-data.min.js"></script>
+  <script>
+    // Salva a posição atual do scroll na sessionStorage
+    window.addEventListener('scroll', () => {
+      sessionStorage.setItem('scrollPosition', window.scrollY);
+    });
+
+    // Recupera a posição do scroll quando a página é recarregada
+    window.addEventListener('load', () => {
+      const scrollPosition = sessionStorage.getItem('scrollPosition');
+      if (scrollPosition) {
+        const targetY = parseInt(scrollPosition);
+        const start = window.scrollY;
+        const distance = targetY - start;
+        const duration = 1000; // Tempo de duração da animação em milissegundos
+        let startTime = null;
+
+        function step(currentTime) {
+          if (!startTime) {
+            startTime = currentTime;
+          }
+
+          const progress = Math.min((currentTime - startTime) / duration, 1);
+          const ease = progress * (2 - progress);
+          const newY = start + distance * ease;
+
+          window.scrollTo(0, newY);
+
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          } else {
+            sessionStorage.removeItem('scrollPosition');
+          }
+        }
+
+        window.requestAnimationFrame(step);
+      }
+    });
+  </script>
+  <script>
+    function ligar_desligar(nome, id, estado) {
+        var data = {
+          nome: nome,
+          id: id,
+          estado: estado
+        };
+
+        var headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        fetch(`/on_off/dispositivo/${id}`, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(data)
+        })
+          .then(function (response) {
+            if (response.ok) {
+              if(estado == true){
+                alert(`O dispositivo ${nome} foi ligado`);
+              }else{
+                alert(`O dispositivo ${nome} foi desligado`);
+              }
+              headers.delete("Content-Type"); // Limpar o cabeçalho
+            } else {
+              console.log("Ocorreu um erro ao enviar a requisição.");
+            }
+          })
+          .catch(function (error) {
+            console.log("Ocorreu um erro ao enviar a requisição:", error);
+          });
+      }
+
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(to left, #32f7ac, #0078d8);">
+    <a class="navbar-brand" href="/controle">Controle de dispositivos</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/criarGrupo">Criar Grupo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/grupos">Ver Grupos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cadastrarDispositivos">Cadastro de Dispositivos</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <%=user%>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">sair</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1 class="text-center" id="titulo">Pesquisar por nome</h1>
+    <div class="row mt-4">
+      <div class="col-md-6 mx-auto">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Pesquisar" onkeyup="filterDevices(this.value)">
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <% if(deviceList && deviceList.length> 0) { %>
+        <% for(let i=0; i < deviceList.length; i++){ %>
+          <div class="col-md-4 device-card">
+            <div class="card">
+              <div class="card-body space">
+                <h5 class="card-title">
+                  <%= deviceList[i].nome%>
+                    <img src="/public/img/air-conditioner-svgrepo-com.svg" style="width: 40px; height: 40px;">
+                    <a href="/editarDispositivo/<%=deviceList[i]._id%>">
+                      <img src="/public/img/wifi-high-svgrepo-com.svg" class="iconEdit"
+                        id="edit-device-<%= deviceList[i].id %>" title="air">
+                    </a>
+                </h5>
+                <p class="card-text">Status: <span class="text-success">
+                    <% if(deviceList[i].on_off==false) { %>
+                      Desligado
+                      <% } else { %>
+                        Ligado
+                        <% } %>
+                  </span></p>
+                <div class="btn-group">
+                  <button onclick="ligar_desligar('<%=deviceList[i].nome%>', '<%=deviceList[i]._id%>', false)"
+                    class="btn btn-danger btn-sm mr-2" type="button">Desligar</button>
+                  <button onclick="ligar_desligar('<%=deviceList[i].nome%>', '<%=deviceList[i]._id%>', true)"
+                    class="btn btn-success btn-sm" type="button">Ligar</button>
+                </div>
+                <div class="form-group mt-3">
+                  <label for="calendar">Inicio e Fim</label>
+                  <form action = "/agendamento/dispositivo/<%=deviceList[i]._id%>" method="POST">
+                      <input type="hidden" class="form-control" name="usuario" value="<%=deviceList[i].usuario%>">
+                      <input type="hidden" class="form-control" name="dispositivo" value="<%=deviceList[i].nome%>">
+                      <input type="datetime-local" class="form-control" id="inicio-<%=deviceList[i]._id%>" name="inicio"
+                        placeholder="Selecione uma data do inicio" min="<%=currentDate%>" required>
+                      <br>
+                      <input type="datetime-local" class="form-control" id="fim-<%=deviceList[i]._id%>" name="fim"
+                        placeholder="Selecione uma data do fim" min="<%=currentDate%>" required>
+                      <br>
+                      <input type="hidden" class="form-control" name="id" value="<%=deviceList[i]._id%>">
+                      <button id="button-agendar-<%=deviceList[i]._id%>" class="btn btn-gradient" type="submit" style="display: block;
+                    margin: 0 auto;">Agendar</button>
+                  </form>
+                </div>
+                <a href="/deletarDispositivo/<%=deviceList[i]._id%>">
+                  <img src="/public/img/delete-2-svgrepo-com.svg" class="iconEdit" title="icon">
+                </a>
+              </div>
+            </div>
+          </div>
+          <%} %>
+            <% }%>
+
+    </div>
+  </div>
+
+  <script>
+    function filterDevices(searchTerm) {
+      // Seleciona todos os elementos card de dispositivo
+      let devices = document.querySelectorAll('.device-card');
+
+      // Verifica se há um termo de pesquisa
+      if (searchTerm) {
+        // Transforma a string de pesquisa em minúsculas
+        searchTerm = searchTerm.toLowerCase();
+
+        // Itera sobre cada dispositivo e verifica se o nome contém a string de pesquisa
+        for (let i = 0; i < devices.length; i++) {
+          let deviceName = devices[i].querySelector('.card-title').textContent.toLowerCase();
+
+          if (deviceName.includes(searchTerm)) {
+            devices[i].style.display = 'block';
+          } else {
+            devices[i].style.display = 'none';
+          }
+        }
+      } else {
+        // Se a barra de pesquisa estiver vazia, exibe todos os dispositivos
+        for (let i = 0; i < devices.length; i++) {
+          devices[i].style.display = 'block';
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

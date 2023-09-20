@@ -1,0 +1,31 @@
+config:
+  target: "https://simenergy-production.up.railway.app"
+  phases:
+    - name: "Teste 5 usuários"
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 10
+    - name: "Teste com 10 usuários"
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 15
+    - name: "Teste com 15"
+    - duration: 60
+      arrivalRate: 15
+      rampTo: 20
+    - name: "Teste com 20"
+    - duration: 300
+      arrivalRate: 20
+scenarios:
+  - name: "Teste de carga com 10 usuários"
+    flow:
+      - get:
+          url: "/"
+  - name: "Teste de carga com 15 usuários"
+    flow:
+      - get:
+          url: "/"
+  - name: "Teste de carga com 20 usuários"
+    flow:
+      - get:
+          url: "/"

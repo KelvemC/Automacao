@@ -1,0 +1,85 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+/*páginaInicial*/
+body{
+    background-color: #0b2c24bd;
+}
+
+.tarefas{
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    font-size: 20px;
+    margin: 10px auto;
+    max-width: 700px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+
+.card {
+    margin-bottom: 20px;
+    border-radius: 15px !important; 
+}
+
+#titulo{
+    color: white;
+}
+
+.navbar-brand{
+    color: white !important;
+}
+.navbar-light .navbar-nav .nav-link{
+    color: white;
+}
+
+img.iconEdit{
+    width: 25px;
+    height: 25px;
+    float: right;
+    margin-left: 10px;
+}
+/*end*/
+
+.button-container{
+    display: flex;
+    justify-content: center;
+}
+
+.btn-gradient {
+    background-image: linear-gradient(to left, #32f7ac, #0078d8);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-gradient:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+.container.body-excluir{
+    justify-content: center;
+    padding: 200px;
+}
+  
+.device-card .card-body .btn-group {
+    display: flex;
+    justify-content: center;
+  }
+  
